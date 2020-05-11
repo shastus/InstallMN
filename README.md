@@ -92,3 +92,50 @@ cd ~ && wget https://raw.githubusercontent.com/shastus/InstallMN/master/rapidsmn
 ![11](https://www.rapidsnetwork.io/wp-content/uploads/11.png)
 
 3.2.2 Press `ENTER` Then Simply follow the on-screen instructions.
+
+
+3.3 Check whether the master node is completely started
+
+Now go back to your VPS and type:
+
+`./rapids-cli startmasternode local false`
+
+If everything went well, you should receive the following message:
+
+“Masternode successfully started”
+
+Congratulations! You have successfully started your masternode!
+
+ADDITIONAL NOTES:
+
+1) if the output of
+
+`getmasternodestatus`
+
+is fine, then you are perfectly fine. But have in mind that it can take up to 2 hours for masternode to change status from
+`ACTIVE`
+to
+`ENABLED`
+in the masternode list.
+
+2) First masternode reward requires a longer waiting period. It usually takes 3-5 days to receive a first masternode reward.
+3) You can close the Control wallet, as it is not needed. Only VPS should be working 24/7.
+
+If you have any troubles or issues, feel free to join Rapids Discord and post your question in #support channel. Again, DO NOT ever receive any help or assistance through private messages, as there are many scammers out there trying to steal your coins, even if they look the same as developers, admins or support staff. Every help ever will be provided through public channels.
+
+# 5. Shutting down a Masternode
+
+5.1) How do I stop running masternode on my VPS and delete masternode from my Rapids Control wallet?
+
+a) In Control wallet in Masternode tab click on Masternode you wish to shutdown and click “Delete”.
+b) Restart the wallet.
+c) Your 10.000.000 coins are now unlocked and spendable.
+
+5.2) How do I get the 10.000.000 RPD back that I’ve send to my Masternode address at the beginning?
+
+You don’t need to “get it back” as it is already in your wallet.
+Being in the different address is not an issue as that’s also your address.
+
+5.3) Can I use this 10.000.000 RPD normally on my wallet then again, and sell it or stake it normally like before?
+
+Yes! If your wallet is unlocked for staking, it will automatically stake these 10.000.000 coins and you can spend them at any time.
