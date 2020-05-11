@@ -44,7 +44,7 @@ tar zxvf rapids-v2.0.0.0-b784ecbf4d-lin64.tgz -C ~/rapids  > /dev/null 2>&1
 mv ~/rapids/rapids-v2.0.0.0-b784ecbf4d-lin64.tgz/rapidsd ~/rapids
 mv ~/rapids/rapids-v2.0.0.0-b784ecbf4d-lin64.tgz/rapids-cli ~/rapids
 echo -ne "${grn} >Progress: ${grn}[##############]${NC}"
-./alqod -daemon
+./rapidsd -daemon
 echo -e "${grn}Please enter the masternode private key generated in the debug console via ${yel}createmasternodekey ${NC}[0/1]"
 read -e -p " : " MN_KEY
 echo -e "${grn}Please enter a RPC Username  ${yel}Long and random${NC}[0/1]"
