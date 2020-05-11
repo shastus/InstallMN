@@ -52,6 +52,8 @@ echo -e "${grn}Please enter a RPC Username  ${yel}Long and random${NC}[0/1]"
 read -e -p " : " RPC_USER
 echo -e "${grn}Please enter RPC Password ${yel}Longer and Randomer${NC}[0/1]"
 read -e -p " : " PASSWORD
+echo -e "${yel}Please enter the masternode IP Address with Port${NC}[0/1]"
+read -e -p " : " IPADDRESSPORT
 echo -e "${yel}Please enter the masternode IP Address${NC}[0/1]"
 read -e -p " : " IPADDRESS
 cd ~/rapids/rapids-v2.0.0.0-b784ecbf4d-lin64
@@ -63,10 +65,11 @@ rpcpassword=$PASSWORD
 rpcallowip=127.0.0.1
 server=1
 daemon=1
-logintimestamps=1
+logtimestamps=1
 maxconnections=256
-externalip=$IPADDRESS
 masternode=1
+externalip=$IPADDRESS
+masternodeaddr=$IPADDRESSPORT
 masternodeprivkey=$MN_KEY
 EOF
 echo -ne "${grn}Starting Wallet${NC}"
