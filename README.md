@@ -22,7 +22,20 @@ The basic reasoning for these requirements is that, you get to keep your RPD in 
 3) Still in the control wallet, send 10.000.000 RPD to the address you generated in step 2 (Be 100% sure that you entered the address correctly. We cannot help you, if you send 10.000.000 RPD to an incorrect address.
 4) Still in the control wallet, enter the command into the console:<p>
 <b>`getmasternodeoutputs`</b> (This gets the proof of transaction of sending 10.000.000 RPD)
+  
+ ![1](https://www.rapidsnetwork.io/wp-content/uploads/12.png)
 5) Still on the main computer, we need to edit the masternode.conf. You can find the file in the Rapids data directory, by default in Windows: it’ll be `%Appdata%/Rapids` on Linux: `~/Rapids`
+  
+   ![3](https://www.rapidsnetwork.io/wp-content/uploads/3.png)
+         
+  Click on the Rapids folder:
+    
+   ![4](https://www.rapidsnetwork.io/wp-content/uploads/4.png)
+   
+   Right click on masternode.conf and confirm with (execute with)
+   
+   ![5](https://www.rapidsnetwork.io/wp-content/uploads/5.png)
+  
 Once you have the masternode.conf file open in a text editor, add the following line to it:<p>
 `<Name of Masternode (Use the name you entered earlier for simplicity)>MN Name <Unique IP address>:20480<The result of Step 1> <Result of Step 4> <The number after the long line in Step 4>`<p>
 Example: <p> `MN1 31.14.135.27:20480 892WPpkqbr7sr6Si4fdsfssjjapuFzAXwETCrpPJubnrmU6aKzh c8f4965ea57a68d0e6dd384324dfd28cfbe0c801015b973e7331db8ce018716999 1`<p>
@@ -32,9 +45,17 @@ Substitute it with your own values and without the “<>”s
 
 - [www.vultr.com](https://www.vultr.com/?ref=7745997)
 - $5 Basic cloud computer package
+
+![7](https://www.rapidsnetwork.io/wp-content/uploads/7.png)
+
 - Choose any location close to you for optimal connectivity to your server
 - Ubuntu 16.04.x64 or Ubuntu 18.04.x64
+
+![8](https://www.rapidsnetwork.io/wp-content/uploads/8.png)
+
 - Server (Name anything you want, i.e MN01, MN02 or so)</br>
+
+![9](https://www.rapidsnetwork.io/wp-content/uploads/9.png)
 
 # 3.1 Start an SSH session
 
@@ -51,6 +72,8 @@ Next:
 ```
 ssh root@(yourserveripaddress)
 ```
+![10](https://www.rapidsnetwork.io/wp-content/uploads/10.png)
+
 
 3.1.3 It will connect to the server. Enter your user (root) and VPS password:<br />
 ```
@@ -65,5 +88,7 @@ Password: (vultr password)
 ```
 cd ~ && wget https://raw.githubusercontent.com/shastus/InstallMN/master/rapidsmninst.sh -O rapidsmninstall.sh && chmod +x rapidsmninstall.sh && ./rapidsmninstall.sh
 ```
+
+![11](https://www.rapidsnetwork.io/wp-content/uploads/11.png)
 
 3.2.2 Press `ENTER` Then Simply follow the on-screen instructions.
