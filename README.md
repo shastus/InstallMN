@@ -108,7 +108,7 @@ Congratulations! You have successfully started your masternode!
 
 ADDITIONAL NOTES:
 
-3.4) if the output of
+3.4 if the output of
 
 `getmasternodestatus`
 
@@ -118,24 +118,24 @@ to
 `ENABLED`
 in the masternode list.
 
-3.5) First masternode reward requires a longer waiting period. It usually takes 3-5 days to receive a first masternode reward.
-3.6) You can close the Control wallet, as it is not needed. Only VPS should be working 24/7.
+3.5 First masternode reward requires a longer waiting period. It usually takes 3-5 days to receive a first masternode reward.
+3.6 You can close the Control wallet, as it is not needed. Only VPS should be working 24/7.
 
 If you have any troubles or issues, feel free to join Rapids Discord and post your question in #support channel. Again, DO NOT ever receive any help or assistance through private messages, as there are many scammers out there trying to steal your coins, even if they look the same as developers, admins or support staff. Every help ever will be provided through public channels.
 
 # 4. Shutting down a Masternode
 
-4.1) How do I stop running masternode on my VPS and delete masternode from my Rapids Control wallet?
+4.1 How do I stop running masternode on my VPS and delete masternode from my Rapids Control wallet?
 
-4.1.1) In Control wallet in Masternode tab click on Masternode you wish to shutdown and click “Delete”.
-4.1.2) Restart the wallet.
-4.1.3) Your 10.000.000 coins are now unlocked and spendable.
+4.1.1 In Control wallet in Masternode tab click on Masternode you wish to shutdown and click “Delete”.
+4.1.2 Restart the wallet.
+4.1.3 Your 10.000.000 coins are now unlocked and spendable.
 
-4.2) How do I get the 10.000.000 RPD back that I’ve send to my Masternode address at the beginning?
+4.2 How do I get the 10.000.000 RPD back that I’ve send to my Masternode address at the beginning?
 
 You don’t need to “get it back” as it is already in your wallet.
 Being in the different address is not an issue as that’s also your address.
 
-4.3) Can I use this 10.000.000 RPD normally on my wallet then again, and sell it or stake it normally like before?
+4.3 Can I use this 10.000.000 RPD normally on my wallet then again, and sell it or stake it normally like before?
 
 Yes! If your wallet is unlocked for staking, it will automatically stake these 10.000.000 coins and you can spend them at any time.
