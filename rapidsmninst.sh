@@ -1,4 +1,4 @@
-# cd ~ && wget https://raw.githubusercontent.com/shastus/MNTEST/master/rapidsmninst.sh -O rapidsmninstall.sh && chmod +x rapidsmninstall.sh && ./rapidsmninstall.sh
+# cd ~ && wget https://raw.githubusercontent.com/shastus/InstallMN/master/rapidsmninst.sh -O rapidsmninstall.sh && chmod +x rapidsmninstall.sh && ./rapidsmninstall.sh
 #!/bin/bash
 Cur_Wallet=""
 red='\033[1;31m'
