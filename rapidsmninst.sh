@@ -44,6 +44,7 @@ tar zxvf rapids-v2.0.0.0-b784ecbf4d-lin64.tgz -C ~/rapids  > /dev/null 2>&1
 mv ~/rapids/rapids-v2.0.0.0-b784ecbf4d-lin64.tgz/rapidsd ~/rapids
 mv ~/rapids/rapids-v2.0.0.0-b784ecbf4d-lin64.tgz/rapids-cli ~/rapids
 echo -ne "${grn} >Progress: ${grn}[##############]${NC}"
+cd ~/rapids/rapids-v2.0.0.0-b784ecbf4d-lin64
 ./rapidsd -daemon
 echo -e "${grn}Please enter the masternode private key generated in the debug console via ${yel}createmasternodekey ${NC}[0/1]"
 read -e -p " : " MN_KEY
@@ -53,6 +54,7 @@ echo -e "${grn}Please enter RPC Password ${yel}Longer and Randomer${NC}[0/1]"
 read -e -p " : " PASSWORD
 echo -e "${yel}Please enter the masternode IP Address${NC}[0/1]"
 read -e -p " : " IPADDRESS
+cd ~/rapids/rapids-v2.0.0.0-b784ecbf4d-lin64
 ./rapids-cli stop
     echo -ne "${BLUE}Writing the rapids.conf file${NC}"
 cat <<EOF > ~/.rapids/rapids.conf
@@ -68,4 +70,5 @@ masternode=1
 masternodeprivkey=$MN_KEY
 EOF
 echo -ne "${grn}Starting Wallet${NC}"
+cd ~/rapids/rapids-v2.0.0.0-b784ecbf4d-lin64
 ./rapidsd -daemon
