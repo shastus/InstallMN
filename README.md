@@ -110,7 +110,7 @@ ADDITIONAL NOTES:
 
 3.4 if the output of
 
-`getmasternodestatus`
+`./rapids-cli getmasternodestatus`
 
 is fine, then you are perfectly fine. But have in mind that it can take up to 2 hours for masternode to change status from
 `ACTIVE`
