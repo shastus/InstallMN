@@ -12,7 +12,7 @@ A unique IP address for your VPS / Remote wallet
 (For security reasons, you’re are going to need a different IP for each masternode you plan to host)
 The basic reasoning for these requirements is that, you get to keep your RPD in your local wallet and host your masternode remotely, securely..
 
-# 2. VPS Remote wallet install
+# 2. Rent VPS Remote
 
 - [www.vultr.com](https://www.vultr.com/?ref=7745997)
 - $5 Basic cloud computer package
