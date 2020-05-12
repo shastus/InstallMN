@@ -18,7 +18,7 @@ The basic reasoning for these requirements is that, you get to keep your RPD in 
 <b>`createmasternodekey`</b>
 (This will be the masternode’s privkey. We’ll use this later…)
 2) Using the control wallet still, enter the following command:<p>
-<b>`getaccountaddress`</b> <AnyNameForYourMasternode>
+<b>`getaccountaddress`</b> (Name you want, for example MN01)
 3) Still in the control wallet, send 10.000.000 RPD to the address you generated in step 2 (Be 100% sure that you entered the address correctly. We cannot help you, if you send 10.000.000 RPD to an incorrect address.
 4) Still in the control wallet, enter the command into the console:<p>
 <b>`getmasternodeoutputs`</b> (This gets the proof of transaction of sending 10.000.000 RPD)
