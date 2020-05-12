@@ -1,4 +1,4 @@
-# Rapids Masternode Setup Guide
+![](https://www.rapidsnetwork.io/wp-content/uploads/rapidsm.png)
 
 # 1. Introduction
 
