@@ -12,7 +12,23 @@ A unique IP address for your VPS / Remote wallet
 (For security reasons, you’re are going to need a different IP for each masternode you plan to host)
 The basic reasoning for these requirements is that, you get to keep your RPD in your local wallet and host your masternode remotely, securely..
 
-# 2. Wallet configuration
+# 2. VPS Remote wallet install
+
+- [www.vultr.com](https://www.vultr.com/?ref=7745997)
+- $5 Basic cloud computer package
+
+![7](https://www.rapidsnetwork.io/wp-content/uploads/7.png)
+
+- Choose any location close to you for optimal connectivity to your server
+- Ubuntu 16.04.x64 or Ubuntu 18.04.x64
+
+![8](https://www.rapidsnetwork.io/wp-content/uploads/8.png)
+
+- Server (Name anything you want, i.e MN01, MN02 or so)</br>
+
+![9](https://www.rapidsnetwork.io/wp-content/uploads/9.png)
+
+# 3. Wallet configuration
 
 1) Using the control wallet, enter the debug console (Settings>Debug>console) and type the following command:<p>
 <b>`createmasternodekey`</b>
@@ -40,22 +56,6 @@ Once you have the masternode.conf file open in a text editor, add the following 
 `<Name of Masternode (Use the name you entered earlier for simplicity)>MN Name <Unique IP address>:20480<The result of Step 1> <Result of Step 4> <The number after the long line in Step 4>`<p>
 Example: <p> `MN1 31.14.135.27:20480 892WPpkqbr7sr6Si4fdsfssjjapuFzAXwETCrpPJubnrmU6aKzh c8f4965ea57a68d0e6dd384324dfd28cfbe0c801015b973e7331db8ce018716999 1`<p>
 Substitute it with your own values and without the “<>”s
-
-# 3. VPS Remote wallet install
-
-- [www.vultr.com](https://www.vultr.com/?ref=7745997)
-- $5 Basic cloud computer package
-
-![7](https://www.rapidsnetwork.io/wp-content/uploads/7.png)
-
-- Choose any location close to you for optimal connectivity to your server
-- Ubuntu 16.04.x64 or Ubuntu 18.04.x64
-
-![8](https://www.rapidsnetwork.io/wp-content/uploads/8.png)
-
-- Server (Name anything you want, i.e MN01, MN02 or so)</br>
-
-![9](https://www.rapidsnetwork.io/wp-content/uploads/9.png)
 
 # 3.1 Start an SSH session
 
