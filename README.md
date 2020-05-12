@@ -128,7 +128,9 @@ If you have any troubles or issues, feel free to join Rapids Discord and post yo
 4.1 How do I stop running masternode on my VPS and delete masternode from my Rapids Control wallet?
 
 4.1.1 In Control wallet in Masternode tab click on Masternode you wish to shutdown and click “Delete”.
+
 4.1.2 Restart the wallet.
+
 4.1.3 Your 10.000.000 coins are now unlocked and spendable.
 
 4.2 How do I get the 10.000.000 RPD back that I’ve send to my Masternode address at the beginning?
