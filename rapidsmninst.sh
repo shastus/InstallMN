@@ -39,12 +39,12 @@ cd ~
 mkdir rapids
 cd rapids
 echo -ne "${grn} >Progress: ${grn}[##########----]\r"
-wget https://github.com/RapidsOfficial/Rapids/releases/download/v2.0.0.0-b784ecbf4d/rapids-v2.0.0.0-b784ecbf4d-lin64.tgz > /dev/null 2>&1
-tar zxvf rapids-v2.0.0.0-b784ecbf4d-lin64.tgz -C ~/rapids  > /dev/null 2>&1
-mv ~/rapids/rapids-v2.0.0.0-b784ecbf4d-lin64.tgz/rapidsd ~/rapids
-mv ~/rapids/rapids-v2.0.0.0-b784ecbf4d-lin64.tgz/rapids-cli ~/rapids
+wget https://github.com/RapidsOfficial/Rapids/releases/download/v3.1/Rapids-v3.1-daemon-ubuntu1804.tar.gz > /dev/null 2>&1
+tar zxvf Rapids-v3.1-daemon-ubuntu1804.tar.gz -C ~/rapids  > /dev/null 2>&1
+mv ~/rapids/Rapids-v3.1-daemon-ubuntu1804.tar.gz/rapidsd ~/rapids
+mv ~/rapids/Rapids-v3.1-daemon-ubuntu1804.tar.gz/rapids-cli ~/rapids
 echo -ne "${grn} >Progress: ${grn}[##############]${NC}"
-cd ~/rapids/rapids-v2.0.0.0-b784ecbf4d-lin64
+cd ~/rapids/Rapids-v3.1-daemon-ubuntu1804.tar.gz
 ./rapidsd -daemon
 echo -e "${grn}Please enter the masternode private key generated in the debug console via ${yel}createmasternodekey ${NC}[0/1]"
 read -e -p " : " MN_KEY
