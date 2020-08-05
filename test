@@ -1,0 +1,417 @@
+#!/bin/bash
+#
+# Masternode Update Script
+# for Debian/Ubuntu/CentOS/Fedora Linux
+
+
+VERSION="3.1"
+LOGFILENAME="rpdup.log"
+
+# WALLET(DAEMON) LINKS
+UNIWALLETLINK="https://github.com/RapidsOfficial/Rapids/releases/download/v3.1/Rapids-v3.1-daemon-ubuntu1804.tar.gz"    
+BLKCOUNTLINK="00000000000001367d94f1bf70ad31b99225ddc73d043486380d8c993485d827"							#link to explorer API to ger current network height
+
+#
+WALLETDIR="rapids"                                                             #wallet instalation directory name
+BASICNAME="rapids"
+DATADIRNAME=".rapids"                                                                #datadir name
+
+DAEMONFILE="rapids"                                                                 #daemon file name
+CLIFILE="rapids-cli"                                                                 #cli file name
+TXFILE="rapis-tx"
+CONFFILENAME="rapids.conf"                                                        #conf file name
+
+function print_welcome() {
+	echo ""
+	echo "##############################################################################"
+	echo "###                                                                        ###"
+	echo "###                 Welcome to 
+	O masternode update script               ###"
+	echo "###                                                                        ###"
+	echo "###                 											             ###"
+	echo "###                 											             ###"
+	echo "###                                                                        ###"
+	echo "##############################################################################"
+	echo
+    echo -en "  This script will update your Rapids masternode daemon to version ${VERSION}\n\n"
+    echo -en "  ${RED}WARNING: Running this script may require new masternode activation.${NC}\n"
+    read -n1 -p " Press any key to continue or Ctrl+C to exit ... " confirmtxt
+    echo
+    # if ! [ "$confirmtxt" = "yes" ]; then
+	# 	echo " Masternode update was not confirmed. Exiting..."
+	#     exit
+	# fi
+}
+
+function detect_osversion() {
+	#[2.00]
+	#check /etc/os-release for ID
+	idline=$(more /etc/os-release | grep '^ID=')
+	id=${idline##*=}
+	osfam=$(echo $id | grep -oE '[a-zA-Z0-9]*')
+
+	OSNAME=$(more /etc/os-release | grep '^NAME=')
+	OSNAME=${OSNAME##*=}
+	OSNAME=$(echo ${OSNAME} | grep -oE '[a-zA-Z0-9.,/ ]*')
+	OSVERSION=$(more /etc/os-release | grep '^VERSION=')
+	OSVERSION=${OSVERSION##*=}
+	OSVERSION=$(echo ${OSVERSION} | grep -oE '[a-zA-Z0-9.,/\(\) ]*')
+
+	KERNELVER=$(uname -r)
+	KERNELGEN=$(uname -r | grep -oE '^[0-9]+')
+
+	if [[ "$osfam" =~ ^(ubuntu|debian|linuxmint)$ ]]; then
+		osver=$(lsb_release -c | grep -oE '[^[:space:]]+$')
+		installer="apt-get"
+		firewall="UFW"
+        csumcmd="sha1sum"
+	elif [ "$osfam" = "centos" ]; then
+		osver=${OSVERSION##*(}
+		osver=$(echo ${osver} | grep -oE '[a-zA-Z0-9]*')
+		installer="yum"
+		firewall="FirewallD"
+        csumcmd="sha1sum"
+	elif [ "$osfam" = "fedora" ]; then
+		VID=$(more /etc/os-release | grep '^VERSION_ID=')
+		VID=${VID##*=}
+		osver=$osfam$VID
+		installer="yum"
+		firewall="FirewallD"
+        csumcmd="sha1sum"
+	else
+		osver="not_detected"
+	fi
+	
+	declare -A oslist=( [xenial]=1 [artful]=1 [bionic]=1 [cosmic]=1 [disco]=1 [eoan]=1 [focal]=1 [stretch]=1 [jessie]=1 [buster]=1 [Core]=1 [fedora27]=1 [fedora28]=1 [fedora29]=1 [fedora30]=1 [fedora31]=1)
+	if [[ ${oslist["$osver"]} ]] ; then
+		if [ "$UNIWALLETLINK" = "" ]; then
+			echo -en "${RED} This operating system is not supported by the script. Please contact support.${NC}\n"
+			exit
+		fi
+	else
+		echo -en "${RED} This operating system is not supported by the script. Please contact support.${NC}\n"
+		exit
+	fi
+}
+
+function update_daemon_files() {
+    if [ -d ${WALLETPATH}/backup ]; then 
+        echo -ne " Removing previous deamon backup \r"
+        sudo rm -Rf ${WALLETPATH}/backup >>${LOGFILE} 2>&1
+        [ $? -eq 0 ] && ec=0 || ec=1
+	    [ $ec -eq 0 ] && echo -en $STATUS0 || echo -en $STATUS1
+    fi
+
+    echo -ne " Creating backup directory \r"
+    mkdir ${WALLETPATH}/backup
+    [ $? -eq 0 ] && ec=0 || ec=1
+	[ $ec -eq 0 ] && echo -en $STATUS0 || echo -en $STATUS1
+
+    echo -ne " Moving current daemon to backup directory \r"
+    mv ${WALLETPATH}/${DAEMONFILE} ${WALLETPATH}/backup >>${LOGFILE} 2>&1
+    mv ${WALLETPATH}/${CLIFILE} ${WALLETPATH}/backup >>${LOGFILE} 2>&1
+ 	[ $? -eq 0 ] && ec=0 || ec=1
+	[ $ec -eq 0 ] && echo -en $STATUS0 || echo -en $STATUS1
+
+    echo -ne " Extracting ${filename} \r"
+    tar -xvf ${HOME}/${filename} -C ${WALLETPATH}/ &>>${LOGFILE}
+	[ $? -eq 0 ] && ec=0 || ec=1
+	[ $ec -eq 0 ] && echo -en $STATUS0 || echo -en $STATUS1
+
+	echo -ne " Removing archive ${filename} \r"
+	sudo rm -f ${HOME}/${filename} &>>${LOGFILE}
+	[ $? -eq 0 ] && ec=0 || ec=1
+	[ $ec -eq 0 ] && echo -en $STATUS0 || echo -en $STATUS1
+
+}
+
+function exit_ok() {
+    echo -en "\n${GREEN} Your masternode running target release of the daemon.${NC}\n"
+    echo " Exiting now..."
+    exit 0
+}
+
+function process_kill() {
+    echo -en " Killing daemon process\r"
+    rep=$(sudo kill -s 9 $oldpid &>>${LOGFILE})
+    [ $? -eq 0 ] && ec=0 || ec=1
+	[ $ec -eq 0 ] && echo -en $STATUS0 || echo -en $STATUS1
+    if [ $ec -eq 0 ] && [ -f ${HOME}/${DATADIRNAME}/${DAEMONFILE}.pid ]; then
+        sudo rm -f ${HOME}/${DATADIRNAME}/${DAEMONFILE}.pid >>${LOGFILE} 2>&1
+    fi
+}
+
+function format_pcent() {
+	pcent=$(awk '$1 == ($1+0) {$1 = sprintf("%0.1f", $1)} 1' <<<${pcent})
+	if [ ${#pcent} -eq 3 ]; then
+		pcent='  '$pcent
+	elif [ ${#pcent} -eq 4 ]; then
+		pcent=' '$pcent
+	fi
+}
+
+function print_devsupport() {
+	echo
+	echo " Thank you for using this script. If you found it helpful, you can support developer donating to the address below."
+	echo
+	echo -en " ${PURPLE}XLQ: ${NC}\n"
+	echo
+	echo -en " Script support server: ${PURPLE}${NC}\n"
+	echo
+
+}
+
+function update_conf_file(){
+    echo -en " Updating conf file \r"
+    coinconf="$HOME/$DATADIRNAME/$CONFFILENAME"
+    #echo  >>${coinconf}
+	[ $? -eq 0 ] && ec=0 || ec=1
+	[ $ec -eq 0 ] && echo -en $STATUS0 || echo -en $STATUS1
+}
+
+function verify_checksum(){
+    echo -en " Verifying daemon checksum \r"
+    csum=$($csumcmd ${WALLETPATH}/${DAEMONFILE}  2>>${LOGFILE} | grep -oE '^[a-fA-F0-9]+')
+	[ $? -eq 0 ] && ec=0 || ec=1
+	[ $ec -eq 0 ] && echo -en $STATUS0 || echo -en $STATUS1
+
+	if [ "$csum" = "$UNIDAEMONCS" ]; then exit_ok; fi
+    
+}
+
+function download_daemon(){
+	#download Ubuntu 16.04 wallet
+	filename="${UNIWALLETLINK##*/}"
+	filepath=$HOME'/'$filename
+	echo -en " Loading wallet ${filename} \r"
+	cd ~ && wget ${UNIWALLETLINK} &>>${LOGFILE}
+	[ $? -eq 0 ] && ec=0 || ec=1
+	[ $ec -eq 0 ] && echo -en $STATUS0 || echo -en $STATUS1
+
+	
+
+}
+
+function detect_installation() { 
+    if [ -f /usr/local/bin/${WALLETDIR}-${USER}/$DAEMONFILE ]; then
+        # installation with fantastic script 
+        WALLETPATH=/usr/local/bin/${WALLETDIR}-${USER}
+        SERVICENAME=${DAEMONFILE}-${USER}
+
+    elif [ -f /etc/systemd/system/${BASICNAME}.service ]; then
+        # installation with basic script
+        WALLETPATH=/usr/local/bin
+        SERVICENAME=${BASICNAME}
+
+    elif [ -f /usr/local/bin/$DAEMONFILE ]; then
+        WALLETPATH=/usr/local/bin
+        SERVICENAME=""
+    else
+        #unknown installation
+        echo -en "\n Script didn't detect installation profile.\n"
+        echo " Exiting now..."
+        exit 1
+    fi
+}
+
+function clean_datadir(){
+    echo -en " Cleaning blockchain cache \r"
+    cd ${HOME}/${DATADIRNAME} && rm -Rf blocks/ database/ chainstate/ sporks/ banlist.dat mncache.dat mnpayments.dat peers.dat >>${LOGFILE} 2>&1
+    [ $? -eq 0 ] && ec=0 || ec=1
+    [ $ec -eq 0 ] && echo -en $STATUS0 || echo -en $STATUS1
+}
+
+# constants / gui
+    BLUE="\033[0;34m"
+    PURPLE="\033[0;35m"
+    GREEN="\033[0;32m"
+    RED="\033[0;31m"
+    ITA="\033[3m"
+    NC="\033[0m"
+    portlist=()
+
+# main procedure
+    SCRIPTPATH=$(readlink -f $0)
+    LOGFILE=$HOME/$LOGFILENAME
+    cols=$(tput cols)
+    if [ $cols -ge 100 ]; then cols=100; fi
+    mv=$(expr $cols - 11)
+    STATUSX="\033[${mv}C "
+    STATUS1="\033[${mv}C [${RED} FAILED ${NC}]\n"   #[ FAILED ]
+    STATUS0="\033[${mv}C [ ${GREEN} DONE ${NC} ]\n" #[  DONE  ]
+    STATUS2="\033[${mv}C [ ${NC} SKIP ${NC} ]\n"   #[ FAILED ]
+
+    print_welcome
+#
+# 1. detect OS
+    detect_osversion
+    detect_installation
+# 2. check daemon checksum
+    verify_checksum
+# 3. download new daemon to home
+    download_daemon
+# 4. get collateral txid
+    echo -en " Detecting txhash\r"
+    txhash=$(${WALLETPATH}/${CLIFILE} getmasternodestatus 2>>${LOGFILE} | grep "txhash" | grep -oE '"[a-fA-F0-9]*",' | grep -oE '[a-fA-F0-9]*')
+	[ $? -eq 0 ] && ec=0 || ec=1
+	[ $ec -eq 0 ] && echo -en $STATUS0 || echo -en $STATUS2
+# 5. stop service/daemon
+    echo -en " Detecting current pid\r"
+    oldpid=$(more ${HOME}/${DATADIRNAME}/${DAEMONFILE}.pid 2>>${LOGFILE})
+    [ $? -eq 0 ] && ec=0 || ec=1
+    echo -en " Detecting current pid: pid=${oldpid}\r"
+	[ $ec -eq 0 ] && echo -en $STATUS0 || echo -en $STATUS1
+
+    if [ -f /etc/systemd/system/${SERVICENAME}.service ] && ! [ "$oldpid" = "" ]; then
+        # installed as service
+        echo -en " Sending ${SERVICENAME} service stop, please wait\r"
+        sudo systemctl stop ${SERVICENAME}.service >>${LOGFILE} 2>&1
+        [ $? -eq 0 ] && ec=0 || ec=1
+        echo -en " Sending ${SERVICENAME} service stop             \r"
+	    [ $ec -eq 0 ] && echo -en $STATUS0 || echo -en $STATUS1
+
+        timeoutsec=60; stopped=0
+        echo -en " Waiting for process stop ${timeoutsec} seconds    \r"
+        while [ $timeoutsec -gt 0 ]; do
+            sleep 1
+            ((timeoutsec-=1))
+            pid=$(ps -eo pid | grep ${oldpid} 2>>${LOGFILE})
+            if [ "$pid" = "" ]; then stopped=1; timeoutsec=0; fi
+            echo -en " Waiting for process stop ${timeoutsec} seconds    \r"
+        done
+
+        if [ $stopped -eq 0 ]; then 
+            echo -en " Daemon stop within timeout period           \r" && echo -en $STATUS1
+            process_kill
+        else
+            echo -en " Daemon stop within timeout period           \r" && echo -en $STATUS0
+        fi
+
+    else
+        # installed as daemon
+        echo -en " Sending daemon stop\r"
+        ${WALLETPATH}/${CLIFILE} stop >>${LOGFILE} 2>&1
+	    [ $? -eq 0 ] && ec=0 || ec=1
+	    [ $ec -eq 0 ] && echo -en $STATUS0 || echo -en $STATUS1
+        #wait until daemon stopped or timeout expired
+        timeoutsec=60; stopped=0
+        echo -en " Waiting for process stop ${timeoutsec} seconds    \r"
+        while [ $timeoutsec -gt 0 ]; do
+            sleep 1
+            ((timeoutsec-=1))
+            pid=$(ps -eo pid | grep ${oldpid} 2>>${LOGFILE})
+            if [ "$pid" = "" ]; then stopped=1; timeoutsec=0; fi
+            echo -en " Waiting for process stop ${timeoutsec} seconds    \r"
+        done
+
+        if [ $stopped -eq 0 ]; then 
+            echo -en " Daemon stop within timeout period           \r" && echo -en $STATUS1
+            process_kill
+        else
+            echo -en " Daemon stop within timeout period           \r" && echo -en $STATUS0
+        fi
+    fi
+# 5.1 Clean datadir
+#    clean_datadir
+# 6. install new files
+    update_daemon_files
+# 6.1 update coin.conf
+    #update_conf_file
+
+# 7. start service/daemon
+    if [ -f /etc/systemd/system/${SERVICENAME}.service ]; then
+        echo -en " Sending ${SERVICENAME} service start, please wait\r"
+#        sudo systemctl set-environment "${DAEMONFILE}${USER}opt=-reindex" >/dev/null
+        sudo systemctl start ${SERVICENAME}.service >>${LOGFILE} 2>&1
+		sudo systemctl unset-environment "${DAEMONFILE}${USER}opt" >/dev/null
+
+        [ $? -eq 0 ] && ec=0 || ec=1
+        echo -en " Sending ${SERVICENAME} service start              \r"
+        sleep 5
+	    [ $ec -eq 0 ] && echo -en $STATUS0 || echo -en $STATUS1
+        
+    else
+        echo -en " Sending daemon start\r"
+        ${WALLETPATH}/${DAEMONFILE} -daemon >>${LOGFILE} 2>&1
+	    [ $? -eq 0 ] && ec=0 || ec=1
+        sleep 5
+	    [ $ec -eq 0 ] && echo -en $STATUS0 || echo -en $STATUS1
+    fi
+
+
+# 8. check daemon started
+	echo -en " Checking pid file \r"
+	if [ -f ${HOME}/${DATADIRNAME}/${DAEMONFILE}.pid ]; then
+		pid=$(more ${HOME}/${DATADIRNAME}/${DAEMONFILE}.pid)
+		[ $? -eq 0 ] && ec=0 || ec=1
+		echo -en " Checking pid file: pid=${pid} \r"
+		[ $ec -eq 0 ] && echo -en $STATUS0 || echo -en $STATUS1
+    else
+        pid=0
+        echo -en " ${RED}ERROR: Failed to start daemon, further steps aborted ${NC}\n"
+        echo
+        exit 1
+    fi
+# 9. wait for sync
+    	if [ $pid -gt 0 ]; then
+		#synchronizing with blockchain
+            
+
+			echo -en " Synchronizing blocks \r"
+			echo "#      Synchronizing blocks  " >>${LOGFILE}
+			sleep 1
+			synced="false"
+
+			currentblk=$(${WALLETPATH}/${CLIFILE} getinfo 2>>${LOGFILE} | grep blocks | grep -oE '[0-9]*')
+
+			while
+				! [ "$synced" = "true" ]; do
+				synced=$(${WALLETPATH}/${CLIFILE} mnsync status 2>>${LOGFILE} | grep IsBlockchainSynced | grep -oE '(true|false)')
+				currentblk=$(${WALLETPATH}/${CLIFILE} getinfo 2>>${LOGFILE} | grep blocks | grep -oE '[0-9-]*')
+                concount=$(${WALLETPATH}/${CLIFILE} getconnectioncount 2>>${LOGFILE})
+				if [ "$currentblk" = "" ]; then currentblk=0; fi
+				echo -en " Synchronizing blocks:  block ${currentblk} [ Con: ${concount} ]    \r"
+				echo "#      Loaded blocks: ${currentblk}" >>${LOGFILE}
+				sleep 3
+			done
+			echo -en " Synchronizing blocks:  block ${currentblk} [ ${GREEN}100.0%${NC} ]       \r"
+			[ "$synced" = "true" ] && echo -en $STATUS0 || echo -en $STATUS1
+			echo "#      Synchronizing blocks ...    [ Done ]" >>${LOGFILE}
+        
+        	echo -en " Synchronizing masternode \r"
+			echo "#      Synchronizing masternode ...    " >>${LOGFILE}
+			synced="0"
+			while
+				! [ $synced -eq 999 ]; do
+				synced=$(${WALLETPATH}/${CLIFILE} mnsync status 2>>${LOGFILE} | grep RequestedMasternodeAssets | grep -oE '[0-9]*' )
+				echo -ne " Waiting for masternode synchronization: MasternodeAssets = ${synced} \r"
+				sleep 5
+			done
+			#echo -ne " Waiting for masternode synchronization                             \r"
+			[ $synced -eq  999 ] && echo -en $STATUS0 || echo -en $STATUS1
+			[ $synced -eq  999 ] && echo "#      Waiting for masternode synchronization: Successful" >>${LOGFILE} || echo "#       Waiting for masternode synchronization: FAILED" >>${LOGFILE}
+
+        fi
+
+# 10. check masternode status
+    echo
+    echo -en " Checking masternode state\r"
+    mnstatus=$(${WALLETPATH}/${CLIFILE} masternodedebug 2>>${LOGFILE})
+    if ! [ "$txhash" = "" ]; then
+        mnstate=$(${WALLETPATH}/${CLIFILE} listmasternodes $txhash 2>>${LOGFILE} | grep -oE '(PRE_ENABLED|ENABLED|EXPIRED|WATCHDOG_EXPIRED|NEW_START_REQUIRED|UPDATE_REQUIRED|POSE_BAN|OUTPOINT_SPENT|ACTIVE)')
+		if [ "$mnstate" = "" ]; then
+            logstate="NOT IN LIST"
+            mnstate="${RED}NOT IN LIST${NC}"
+        elif [ "$mnstate" = "PRE_ENABLED" ] || [ "$mnstate" = "ENABLED" ] || [ "$mnstate" = "ACTIVE" ]; then
+            mnstate="${GREEN}${mnstate}${NC}"
+        else
+            mnstate="${RED}${mnstate}${NC}"
+        fi
+        echo -en " Masternode list state: "$mnstate"\n"
+    fi
+	echo -en " Post-start Masternode status: "
+	[ "$mnstatus" = "Masternode successfully started" ] && echo -en "${GREEN}${mnstatus}${NC}\n" || echo -en "${RED}${mnstatus}${NC}\n"
+
+
+# 11. bye
+    print_devsupport
