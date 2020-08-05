@@ -36,15 +36,13 @@ else
   echo "Swap already exists, not creating..."
 fi
 cd ~
-mkdir 
+mkdir rapids
 cd rapids
 echo -ne "${grn} >Progress: ${grn}[##########----]\r"
 wget https://github.com/RapidsOfficial/Rapids/releases/download/v3.1/Rapids-v3.1-daemon-ubuntu1804.tar.gz > /dev/null 2>&1
 tar zxvf Rapids-v3.1-daemon-ubuntu1804.tar.gz -C ~/rapids  > /dev/null 2>&1
-mv ~/rapids/Rapids-v3.1-daemon-ubuntu1804.tar.gz/rapidsd ~/rapids
-mv ~/rapids/Rapids-v3.1-daemon-ubuntu1804.tar.gz/rapids-cli ~/rapids
 echo -ne "${grn} >Progress: ${grn}[##############]${NC}"
-cd ~/rapids/Rapids-v3.1-daemon-ubuntu1804.tar.gz
+cd ~/rapids
 ./rapidsd -daemon
 echo -e "${grn}Please enter the masternode private key generated in the debug console via ${yel}createmasternodekey ${NC}[0/1]"
 read -e -p " : " MN_KEY
