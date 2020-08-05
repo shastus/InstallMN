@@ -36,7 +36,7 @@ else
   echo "Swap already exists, not creating..."
 fi
 cd ~
-mkdir rapids
+mkdir 
 cd rapids
 echo -ne "${grn} >Progress: ${grn}[##########----]\r"
 wget https://github.com/RapidsOfficial/Rapids/releases/download/v3.1/Rapids-v3.1-daemon-ubuntu1804.tar.gz > /dev/null 2>&1
@@ -56,7 +56,7 @@ echo -e "${yel}Please enter the masternode IP Address with Port${NC}[0/1]"
 read -e -p " : " IPADDRESSPORT
 echo -e "${yel}Please enter the masternode IP Address${NC}[0/1]"
 read -e -p " : " IPADDRESS
-cd ~/rapids/rapids-v2.0.0.0-b784ecbf4d-lin64
+cd ~/rapids/Rapids-v3.1-daemon-ubuntu1804
 ./rapids-cli stop
     echo -ne "${BLUE}Writing the rapids.conf file${NC}"
 cat <<EOF > ~/.rapids/rapids.conf
@@ -73,5 +73,5 @@ masternodeaddr=$IPADDRESSPORT
 masternodeprivkey=$MN_KEY
 EOF
 echo -ne "${grn}Starting Wallet${NC}"
-cd ~/rapids/rapids-v2.0.0.0-b784ecbf4d-lin64
+cd ~/rapids/Rapids-v3.1-daemon-ubuntu1804
 ./rapidsd -daemon
