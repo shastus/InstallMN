@@ -3,7 +3,7 @@ mkdir rapids
 cd rapids
 echo -ne "${grn} >Progress: ${grn}[##########----]\r"
 wget https://github.com/RapidsOfficial/Rapids/releases/download/v3.1/Rapids-v3.1-linux-1604.tar.gz > /dev/null 2>&1
-tar zxvf Rapids-v3.1-daemon-ubuntu1804.tar.gz -C ~/rapids  > /dev/null 2>&1
+tar zxvf Rapids-v3.1-linux-1604.tar.gz -C ~/rapids  > /dev/null 2>&1
 echo -ne "${grn} >Progress: ${grn}[##############]${NC}"
 cd ~/rapids
 ./rapidsd -daemon
